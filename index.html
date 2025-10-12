@@ -503,6 +503,15 @@
       </div>
 
       <div class="form-group">
+        <label>Property Type</label>
+        <select id="airbnbRoomType">
+          <option value="">Any type</option>
+          <option value="Entire home/apt">Entire home</option>
+          <option value="Private room">Room</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label>Amenities</label>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
           <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
@@ -948,6 +957,14 @@ function generateAirbnbURL() {
   
   amenities.forEach(a => params.push(`amenities[]=${a}`));
   
+  // Room type - must come before channel parameter
+  const roomType = getVal("airbnbRoomType");
+  if (roomType) {
+    params.push(`room_types[]=${encodeURIComponent(roomType)}`);
+  }
+  
+  params.push("channel=EXPLORE");
+  
   // Sort order
   const sortBy = getVal("airbnbSort");
   if (sortBy === "price") {
@@ -955,8 +972,6 @@ function generateAirbnbURL() {
   } else if (sortBy === "price_reverse") {
     params.push("price_order=desc");
   }
-  
-  params.push("channel=EXPLORE");
   
   return `${base}?${params.join("&")}`;
 }
