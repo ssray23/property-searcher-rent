@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Property Search Builder</title>
+<style>
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: #f5f5f5;
+    color: #2c3e50;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .container {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  h2 { 
+    text-align: center; 
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 32px;
+  }
+  
+  .platform-selector {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .platform-selector label {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #2c3e50;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: 3px solid #e0e0e0;
+    border-radius: 10px;
+    transition: all 0.3s;
+  }
+  
+  .platform-selector input[type="radio"] {
+    width: auto;
+    margin-right: 10px;
+  }
+  
+  .platform-selector label:has(input:checked) {
+    border-color: #3498db;
+    background: #e8f4fd;
+  }
+  
+  .platform-selector label:has(input[value="rightmove"]:checked) {
+    border-color: #003d5c;
+    background: #d6e9f7;
+  }
+  
+  .platform-selector label:has(input[value="airbnb"]:checked) {
+    border-color: #e6004c;
+    background: #ffe6e6;
+  }
+  
+  .platform-selector label:has(input[value="zoopla"]:checked) {
+    border-color: #7c2b85;
+    background: #f3e6f5;
+  }
+  
+  .rightmove-theme .info-box {
+    background: #d6e9f7;
+    border: 2px solid #003d5c;
+  }
+  
+  .rightmove-theme button {
+    background: #003d5c;
+    color: #fff;
+    border: 3px solid #000;
+  }
+  
+  .rightmove-theme button:hover {
+    background: #002a40;
+  }
+  
+  .airbnb-theme .info-box {
+    background: #ffe6e6;
+    border: 2px solid #e6004c;
+  }
+  
+  .airbnb-theme button {
+    background: #e6004c;
+    color: #fff;
+    border: 3px solid #000;
+  }
+  
+  .airbnb-theme button:hover {
+    background: #b30039;
+  }
+  
+  .zoopla-theme .info-box {
+    background: #f3e6f5;
+    border: 2px solid #7c2b85;
+  }
+  
+  .zoopla-theme button {
+    background: #7c2b85;
+    color: #fff;
+    border: 3px solid #000;
+  }
+  
+  .zoopla-theme button:hover {
+    background: #5a1f61;
+  }
+  
+  .zoopla-theme input:focus,
+  .zoopla-theme select:focus {
+    border-color: #7c2b85;
+  }
+  
+  .zoopla-theme input[type="checkbox"] {
+    accent-color: #7c2b85;
+  }
+  
+  .zoopla-theme .info-box strong {
+    color: #7c2b85;
+  }
+  
+  .subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    font-size: 14px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label { 
+    display: block; 
+    margin-bottom: 8px; 
+    font-weight: 600;
+    color: #34495e;
+    font-size: 14px;
+  }
+  
+  input, select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px; 
+    border-radius: 8px; 
+    border: 2px solid #e0e0e0; 
+    font-size: 14px;
+    font-family: Helvetica, Arial, sans-serif;
+    transition: all 0.3s;
+    background: #f8f9fa;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+    background: #ffffff;
+  }
+  
+  .rightmove-theme input:focus,
+  .rightmove-theme select:focus {
+    border-color: #003d5c;
+  }
+  
+  .airbnb-theme input:focus,
+  .airbnb-theme select:focus {
+    border-color: #e6004c;
+  }
+  
+  .airbnb-theme input[type="checkbox"] {
+    accent-color: #e6004c;
+  }
+  
+  .rightmove-theme input[type="checkbox"] {
+    accent-color: #003d5c;
+  }
+  
+  .info-box {
+    background: #e8f4fd;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+  
+  .info-box strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #2c3e50;
+  }
+  
+  .rightmove-theme .info-box strong {
+    color: #003d5c;
+  }
+  
+  .airbnb-theme .info-box strong {
+    color: #e6004c;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  
+  button {
+    flex: 1;
+    padding: 14px;
+    cursor: pointer;
+    background: #003d5c;
+    color: #fff; 
+    font-weight: bold;
+    font-family: Helvetica, Arial, sans-serif;
+    border: 3px solid #000; 
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+  
+  button:hover { 
+    background: #002a40;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .success-message {
+    color: #27ae60;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+  }
+  
+  @media (max-width: 600px) {
+    .two-column {
+      grid-template-columns: 1fr;
+    }
+    
+    .button-group {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>🏠 Property Search Builder</h2>
+    
+    <div class="platform-selector">
+      <label>
+        <input type="radio" name="platform" value="rightmove" checked onchange="togglePlatform()">
+        Rightmove
+      </label>
+      <label>
+        <input type="radio" name="platform" value="airbnb" onchange="togglePlatform()">
+        Airbnb
+      </label>
+      <label>
+        <input type="radio" name="platform" value="zoopla" onchange="togglePlatform()">
+        Zoopla
+      </label>
+    </div>
+    
+    <div class="subtitle" id="subtitle">Generate working Rightmove rental search URLs</div>
+
+    <div id="formContainer" class="rightmove-theme">
+    
+    <!-- RIGHTMOVE FORM -->
+    <div id="rightmoveForm">
+      <div class="info-box">
+        <strong>ℹ️ Using Custom Map Search</strong>
+        This tool uses custom map area identifiers from Rightmove. To get your own custom area:<br>
+        1. Go to rightmove.co.uk and use the "Draw a search area" feature on the map<br>
+        2. Copy the locationIdentifier from the URL (looks like USERDEFINEDAREA^{"id":...})<br>
+        3. Paste it in the field below to override the default location
+      </div>
+
+      <div class="form-group">
+        <label>Quick Location Presets</label>
+        <select id="locationPreset" onchange="updateLocation()">
+          <option value="">-- Select a preset or enter custom below --</option>
+          <option value='USERDEFINEDAREA^{"id":9934682}'>Custom Map Area (Default)</option>
+          <option value="REGION%5E93962">Hounslow</option>
+          <option value="REGION%5E93947">Ealing</option>
+          <option value="REGION%5E85314">Acton</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Custom Location Identifier</label>
+        <input type="text" id="locationId" placeholder='Override with your own location identifier'>
+        <div class="success-message" id="locationSuccess">✓ Location set</div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Price (£/month)</label>
+          <input type="number" id="minPrice" placeholder="Optional" step="50">
+        </div>
+
+        <div class="form-group">
+          <label>Max Price (£/month)</label>
+          <input type="number" id="maxPrice" placeholder="e.g. 1590" step="50">
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Bedrooms</label>
+          <select id="minBedrooms">
+            <option value="">No min</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Max Bedrooms</label>
+          <select id="maxBedrooms">
+            <option value="">No max</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Property Type</label>
+          <select id="propertyTypes">
+            <option value="">Any</option>
+            <option value="flat">Flats</option>
+            <option value="detached,semi-detached,terraced">Houses</option>
+            <option value="bungalow">Bungalows</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Furnishing</label>
+          <select id="furnishTypes">
+            <option value="">Any</option>
+            <option value="furnished">Furnished</option>
+            <option value="unfurnished">Unfurnished</option>
+            <option value="furnished,partFurnished">Furnished or Part-furnished</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Search Radius (miles)</label>
+          <select id="radius">
+            <option value="0.0">This area only</option>
+            <option value="0.25">Within ¼ mile</option>
+            <option value="0.5">Within ½ mile</option>
+            <option value="1.0">Within 1 mile</option>
+            <option value="3.0">Within 3 miles</option>
+            <option value="5.0">Within 5 miles</option>
+            <option value="10.0">Within 10 miles</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Sort By</label>
+          <select id="sortType">
+            <option value="6">Newest listed</option>
+            <option value="1">Highest price first</option>
+            <option value="2">Lowest price first</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Added to Site</label>
+        <select id="maxDaysSinceAdded">
+          <option value="">Any time</option>
+          <option value="1">Last 24 hours</option>
+          <option value="3">Last 3 days</option>
+          <option value="7">Last 7 days</option>
+          <option value="14">Last 14 days</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Must Have Features</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="mustHaveGarden" style="width: auto; margin-right: 8px;">
+            Garden
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="mustHaveParking" style="width: auto; margin-right: 8px;">
+            Parking/Garage
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="mustHaveBalcony" style="width: auto; margin-right: 8px;">
+            Balcony/Terrace
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="petsAllowed" style="width: auto; margin-right: 8px;">
+            Pets Allowed
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Minimum Number of Photos</label>
+        <select id="minPhotos">
+          <option value="">No minimum</option>
+          <option value="5">At least 5 photos</option>
+          <option value="10">At least 10 photos</option>
+          <option value="15">At least 15 photos</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Additional Options</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="includeLetAgreed" style="width: auto; margin-right: 8px;">
+            Show "Let Agreed" properties
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="includeRetirement" style="width: auto; margin-right: 8px;">
+            Include retirement homes
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Keywords (optional)</label>
+        <input type="text" id="keywords" placeholder="e.g. garden, parking, balcony">
+      </div>
+    </div>
+
+    <!-- AIRBNB FORM -->
+    <div id="airbnbForm" style="display:none;">
+      <div class="info-box">
+        <strong>🔴 Airbnb Search Configuration</strong>
+        Set your preferences below to generate an Airbnb search URL with map-based results and filters.
+      </div>
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="airbnbLocation" value="Hounslow Central" placeholder="e.g. Hounslow Central, Ealing, Acton">
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Check-in Date</label>
+          <input type="date" id="checkinDate" onchange="updatePriceHelper()">
+        </div>
+
+        <div class="form-group">
+          <label>Check-out Date</label>
+          <input type="date" id="checkoutDate" onchange="updatePriceHelper()">
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Adults</label>
+          <input type="number" id="adults" value="1" min="1" max="16">
+        </div>
+
+        <div class="form-group">
+          <label>Children</label>
+          <input type="number" id="children" value="1" min="0" max="15">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Max Price (£ total for entire stay)</label>
+        <input type="number" id="airbnbMaxPrice" value="3720" placeholder="e.g. 3720" step="100" onchange="updatePriceHelper()" oninput="updatePriceHelper()">
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;" id="priceHelper">
+          💡 Based on dates above, this is the TOTAL price for your entire stay
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Amenities</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="amenityKitchen" checked style="width: auto; margin-right: 8px;">
+            Kitchen
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="amenityWasher" checked style="width: auto; margin-right: 8px;">
+            Washer
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="amenityDryer" checked style="width: auto; margin-right: 8px;">
+            Dryer
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="amenityWifi" style="width: auto; margin-right: 8px;">
+            Wifi
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="amenityParking" style="width: auto; margin-right: 8px;">
+            Free parking
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="amenityAC" style="width: auto; margin-right: 8px;">
+            Air conditioning
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Stay Duration (for monthly search preference)</label>
+        <select id="monthlyLength">
+          <option value="">Don't specify monthly preference</option>
+          <option value="1">Prefer 1 month stays</option>
+          <option value="2">Prefer 2 month stays</option>
+          <option value="3" selected>Prefer 3 month stays</option>
+          <option value="6">Prefer 6 month stays</option>
+          <option value="12">Prefer 12 month stays</option>
+        </select>
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 This tells Airbnb your preferred monthly stay length (separate from your actual dates above)
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Sort By</label>
+        <select id="airbnbSort">
+          <option value="">Best match (default)</option>
+          <option value="price">Price - Low to high</option>
+          <option value="price_reverse">Price - High to low</option>
+        </select>
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 Note: Airbnb may override this with their algorithm
+        </div>
+      </div>
+    </div>
+
+    <!-- ZOOPLA FORM -->
+    <div id="zooplaForm" style="display:none;">
+      <div class="info-box">
+        <strong>🟣 Zoopla Search Configuration</strong>
+        Set your preferences below to generate a Zoopla rental search URL.
+      </div>
+
+      <div class="form-group">
+        <label>Quick Location Presets</label>
+        <select id="zooplaLocationPreset" onchange="updateZooplaLocation()">
+          <option value="">-- Select a preset or enter custom below --</option>
+          <option value="Ealing (London Borough), London|ealing-london-borough">Ealing (London Borough)</option>
+          <option value="Hounslow (London Borough), London|hounslow-london-borough">Hounslow</option>
+          <option value="Acton, London|acton-london">Acton</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="zooplaLocation" value="Ealing (London Borough), London" placeholder="e.g. Ealing, Hounslow, Acton, Richmond">
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 For best results, use the presets above or manually enter both location and slug below
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Location Slug (for URL path) - Optional</label>
+        <input type="text" id="zooplaLocationSlug" placeholder="Leave empty to auto-generate (e.g. ealing-london-borough)">
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 If empty, will use simplified search format
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Price (£/month)</label>
+          <input type="number" id="zooplaMinPrice" placeholder="Optional" step="50">
+        </div>
+
+        <div class="form-group">
+          <label>Max Price (£/month)</label>
+          <input type="number" id="zooplaMaxPrice" value="1500" placeholder="e.g. 1500" step="50">
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Bedrooms</label>
+          <select id="zooplaMinBeds">
+            <option value="">No min</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Max Bedrooms</label>
+          <select id="zooplaMaxBeds">
+            <option value="">No max</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Property Type</label>
+        <select id="zooplaPropertyType">
+          <option value="">Any</option>
+          <option value="flats">Flats</option>
+          <option value="houses">Houses</option>
+          <option value="bungalows">Bungalows</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Furnishing</label>
+        <select id="zooplaFurnishing">
+          <option value="">Any</option>
+          <option value="furnished">Furnished</option>
+          <option value="unfurnished">Unfurnished</option>
+          <option value="part_furnished">Part Furnished</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Search Radius</label>
+        <select id="zooplaRadius">
+          <option value="">This area only</option>
+          <option value="0.25">Within ¼ mile</option>
+          <option value="0.5">Within ½ mile</option>
+          <option value="1">Within 1 mile</option>
+          <option value="3">Within 3 miles</option>
+          <option value="5">Within 5 miles</option>
+          <option value="10">Within 10 miles</option>
+          <option value="20">Within 20 miles</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Additional Filters</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="zooplaExcludeRetirement" checked style="width: auto; margin-right: 8px;">
+            Exclude retirement homes
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="zooplaExcludeShared" checked style="width: auto; margin-right: 8px;">
+            Exclude shared accommodation
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="zooplaExcludeStudent" checked style="width: auto; margin-right: 8px;">
+            Exclude student accommodation
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button onclick="openURL()">🚀 Open in <span id="platformName">Rightmove</span></button>
+    </div>
+    
+    </div>
+  </div>
+
+<script>
+function togglePlatform() {
+  const platform = document.querySelector('input[name="platform"]:checked').value;
+  const rightmoveForm = document.getElementById('rightmoveForm');
+  const airbnbForm = document.getElementById('airbnbForm');
+  const zooplaForm = document.getElementById('zooplaForm');
+  const subtitle = document.getElementById('subtitle');
+  const platformName = document.getElementById('platformName');
+  const formContainer = document.getElementById('formContainer');
+  
+  if (platform === 'rightmove') {
+    rightmoveForm.style.display = 'block';
+    airbnbForm.style.display = 'none';
+    zooplaForm.style.display = 'none';
+    subtitle.textContent = 'Generate working Rightmove rental search URLs (excludes house shares & student accommodation)';
+    platformName.textContent = 'Rightmove';
+    formContainer.className = 'rightmove-theme';
+  } else if (platform === 'airbnb') {
+    rightmoveForm.style.display = 'none';
+    airbnbForm.style.display = 'block';
+    zooplaForm.style.display = 'none';
+    subtitle.textContent = 'Generate Airbnb rental search URLs with your preferred filters';
+    platformName.textContent = 'Airbnb';
+    formContainer.className = 'airbnb-theme';
+    updatePriceHelper();
+  } else {
+    rightmoveForm.style.display = 'none';
+    airbnbForm.style.display = 'none';
+    zooplaForm.style.display = 'block';
+    subtitle.textContent = 'Generate Zoopla rental search URLs with your preferred filters';
+    platformName.textContent = 'Zoopla';
+    formContainer.className = 'zoopla-theme';
+  }
+}
+
+function updatePriceHelper() {
+  const checkin = getVal("checkinDate");
+  const checkout = getVal("checkoutDate");
+  const priceHelper = document.getElementById("priceHelper");
+  
+  if (checkin && checkout && priceHelper) {
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+    const nights = Math.ceil((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
+    
+    if (nights > 0) {
+      const maxPrice = getVal("airbnbMaxPrice") || "3720";
+      const perNight = Math.round(maxPrice / nights);
+      priceHelper.innerHTML = `💡 For ${nights} nights, this is approximately £${perNight}/night`;
+    }
+  }
+}
+
+function updateLocation() {
+  const dropdown = document.getElementById('locationPreset');
+  const manual = document.getElementById('locationId');
+  if (dropdown.value) {
+    manual.value = dropdown.value;
+    showLocationSuccess();
+  }
+}
+
+function updateZooplaLocation() {
+  const dropdown = document.getElementById('zooplaLocationPreset');
+  const locationInput = document.getElementById('zooplaLocation');
+  const slugInput = document.getElementById('zooplaLocationSlug');
+  
+  if (dropdown.value) {
+    const parts = dropdown.value.split('|');
+    locationInput.value = parts[0];
+    if (parts[1]) {
+      slugInput.value = parts[1];
+    }
+  }
+}
+
+function showLocationSuccess() {
+  const msg = document.getElementById('locationSuccess');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 2000);
+}
+
+function openURL() {
+  const platform = document.querySelector('input[name="platform"]:checked').value;
+  let url;
+  if (platform === 'rightmove') {
+    url = generateRightmoveURL();
+  } else if (platform === 'airbnb') {
+    url = generateAirbnbURL();
+  } else {
+    url = generateZooplaURL();
+  }
+  window.open(url, "_blank");
+}
+
+function generateRightmoveURL() {
+  const base = "https://www.rightmove.co.uk/property-to-rent/find.html";
+  const params = [];
+  
+  let locationId = getVal("locationId");
+  if (!locationId) {
+    locationId = 'USERDEFINEDAREA^{"id":9934682}';
+  }
+  
+  if (locationId.includes('{')) {
+    params.push(`locationIdentifier=${encodeURIComponent(locationId)}`);
+  } else if (locationId.includes('%5E')) {
+    params.push(`locationIdentifier=${locationId}`);
+  } else if (locationId.includes('^')) {
+    params.push(`locationIdentifier=${locationId.replace('^', '%5E')}`);
+  } else {
+    params.push(`locationIdentifier=${locationId}`);
+  }
+  
+  params.push("searchType=RENT");
+  params.push("channel=RENT");
+  
+  const minPrice = getVal("minPrice");
+  const maxPrice = getVal("maxPrice");
+  if (minPrice) params.push(`minPrice=${minPrice}`);
+  if (maxPrice) params.push(`maxPrice=${maxPrice}`);
+  
+  const minBeds = getVal("minBedrooms");
+  const maxBeds = getVal("maxBedrooms");
+  if (minBeds) params.push(`minBedrooms=${minBeds}`);
+  if (maxBeds) params.push(`maxBedrooms=${maxBeds}`);
+  
+  const propTypes = getVal("propertyTypes");
+  if (propTypes) params.push(`propertyTypes=${propTypes}`);
+  
+  const furnishing = getVal("furnishTypes");
+  if (furnishing) params.push(`furnishTypes=${furnishing}`);
+  
+  const radius = getVal("radius");
+  if (radius && radius !== "0.0") params.push(`radius=${radius}`);
+  
+  const keywords = getVal("keywords");
+  if (keywords) params.push(`keywords=${encodeURIComponent(keywords)}`);
+  
+  const sortType = getVal("sortType") || "6";
+  params.push(`sortType=${sortType}`);
+  
+  const maxDays = getVal("maxDaysSinceAdded");
+  if (maxDays) params.push(`maxDaysSinceAdded=${maxDays}`);
+  
+  if (document.getElementById("mustHaveGarden").checked) {
+    params.push("mustHave=garden");
+  }
+  if (document.getElementById("mustHaveParking").checked) {
+    params.push("mustHave=parking");
+  }
+  if (document.getElementById("mustHaveBalcony").checked) {
+    params.push("mustHave=balconyTerrace");
+  }
+  
+  if (document.getElementById("petsAllowed").checked) {
+    const existingKeywords = getVal("keywords");
+    const petKeyword = existingKeywords ? `${existingKeywords} pets allowed` : "pets allowed";
+    const keywordIndex = params.findIndex(p => p.startsWith("keywords="));
+    if (keywordIndex !== -1) {
+      params.splice(keywordIndex, 1);
+    }
+    params.push(`keywords=${encodeURIComponent(petKeyword)}`);
+  }
+  
+  const minPhotos = getVal("minPhotos");
+  if (minPhotos) params.push(`minPhotos=${minPhotos}`);
+  
+  let dontShow = [];
+  dontShow.push("houseShare");
+  dontShow.push("student");
+  
+  if (!document.getElementById("includeRetirement").checked) {
+    dontShow.push("retirement");
+  }
+  
+  if (dontShow.length > 0) {
+    params.push(`dontShow=${dontShow.join("%2C")}`);
+  }
+  
+  const includeLetAgreed = document.getElementById("includeLetAgreed").checked;
+  params.push(`includeLetAgreed=${includeLetAgreed ? "true" : "false"}`);
+  
+  params.push("transactionType=LETTING");
+  
+  return `${base}?${params.join("&")}`;
+}
+
+function generateAirbnbURL() {
+  const base = "https://www.airbnb.co.uk/s/homes";
+  const params = [];
+  
+  const location = getVal("airbnbLocation") || "Hounslow Central";
+  
+  // Get dates or use defaults
+  let checkin = getVal("checkinDate");
+  let checkout = getVal("checkoutDate");
+  
+  if (!checkin || !checkout) {
+    const today = new Date();
+    const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const lastDayNextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 0);
+    checkin = nextMonth.toISOString().split('T')[0];
+    checkout = lastDayNextMonth.toISOString().split('T')[0];
+  }
+  
+  params.push("refinement_paths[]=/homes");
+  params.push("date_picker_type=calendar");
+  params.push(`checkin=${checkin}`);
+  params.push(`checkout=${checkout}`);
+  
+  const adults = getVal("adults") || "1";
+  const children = getVal("children") || "0";
+  params.push(`adults=${adults}`);
+  if (children !== "0") {
+    params.push(`children=${children}`);
+  }
+  
+  params.push("source=structured_search_input_header");
+  params.push("search_type=filter_change");
+  params.push(`query=${encodeURIComponent(location)}`);
+  params.push("search_mode=regular_search");
+  params.push("search_by_map=true");
+  
+  const monthlyLength = getVal("monthlyLength") || "3";
+  if (monthlyLength) {
+    params.push("flexible_trip_lengths[]=one_week");
+    params.push(`monthly_start_date=${checkin}`);
+    params.push(`monthly_length=${monthlyLength}`);
+    
+    const startDate = new Date(checkin);
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + parseInt(monthlyLength));
+    params.push(`monthly_end_date=${endDate.toISOString().split('T')[0]}`);
+  }
+  const maxPrice = getVal("airbnbMaxPrice");
+  if (maxPrice) {
+    params.push("price_filter_input_type=2");
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+    const nights = Math.ceil((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
+    params.push(`price_filter_num_nights=${nights}`);
+    params.push(`price_max=${maxPrice}`);
+  }
+  
+  const amenities = [];
+  if (document.getElementById("amenityKitchen").checked) amenities.push("8");
+  if (document.getElementById("amenityWasher").checked) amenities.push("33");
+  if (document.getElementById("amenityDryer").checked) amenities.push("34");
+  if (document.getElementById("amenityWifi").checked) amenities.push("4");
+  if (document.getElementById("amenityParking").checked) amenities.push("9");
+  if (document.getElementById("amenityAC").checked) amenities.push("5");
+  
+  amenities.forEach(a => params.push(`amenities[]=${a}`));
+  
+  // Sort order
+  const sortBy = getVal("airbnbSort");
+  if (sortBy === "price") {
+    params.push("price_order=asc");
+  } else if (sortBy === "price_reverse") {
+    params.push("price_order=desc");
+  }
+  
+  params.push("channel=EXPLORE");
+  
+  return `${base}?${params.join("&")}`;
+}
+
+function generateZooplaURL() {
+  const location = getVal("zooplaLocation") || "Ealing (London Borough), London";
+  const locationSlug = getVal("zooplaLocationSlug");
+  
+  const params = [];
+  
+  // Exclusions first
+  const excludeRetirement = document.getElementById("zooplaExcludeRetirement").checked;
+  const excludeShared = document.getElementById("zooplaExcludeShared").checked;
+  const excludeStudent = document.getElementById("zooplaExcludeStudent").checked;
+  
+  if (excludeRetirement) params.push("is_retirement_home=false");
+  if (excludeShared) params.push("is_shared_accommodation=false");
+  if (excludeStudent) params.push("is_student_accommodation=false");
+  
+  // Price frequency must come before price values
+  params.push("price_frequency=per_month");
+  
+  // Price range
+  const minPrice = getVal("zooplaMinPrice");
+  const maxPrice = getVal("zooplaMaxPrice");
+  if (minPrice) params.push(`price_min=${minPrice}`);
+  if (maxPrice) params.push(`price_max=${maxPrice}`);
+  
+  // Bedrooms
+  const minBeds = getVal("zooplaMinBeds");
+  const maxBeds = getVal("zooplaMaxBeds");
+  if (minBeds) params.push(`beds_min=${minBeds}`);
+  if (maxBeds) params.push(`beds_max=${maxBeds}`);
+  
+  // Property type
+  const propType = getVal("zooplaPropertyType");
+  if (propType) params.push(`property_type=${propType}`);
+  
+  // Furnishing
+  const furnishing = getVal("zooplaFurnishing");
+  if (furnishing) params.push(`furnished_state=${furnishing}`);
+  
+  // Radius
+  const radius = getVal("zooplaRadius");
+  if (radius) params.push(`radius=${radius}`);
+  
+  // Search query
+  params.push(`q=${encodeURIComponent(location)}`);
+  
+  // Use different URL format based on whether we have a slug
+  if (locationSlug) {
+    // Detailed format with slug in path
+    params.push("search_source=to-rent");
+    return `https://www.zoopla.co.uk/to-rent/property/${locationSlug}/?${params.join("&")}`;
+  } else {
+    // Simplified search format
+    params.push("section=to-rent");
+    return `https://www.zoopla.co.uk/search/?${params.join("&")}`;
+  }
+}
+
+function getVal(id) {
+  const element = document.getElementById(id);
+  return element ? element.value.trim() : "";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  togglePlatform();
+  
+  const locationInput = document.getElementById('locationId');
+  if (locationInput) {
+    locationInput.addEventListener('input', function() {
+      if (this.value) showLocationSuccess();
+    });
+  }
+  
+  // Set default Airbnb dates to next full month
+  setDefaultAirbnbDates();
+});
+
+function setDefaultAirbnbDates() {
+  const today = new Date();
+  const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  const lastDayNextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 0);
+  
+  const checkinInput = document.getElementById('checkinDate');
+  const checkoutInput = document.getElementById('checkoutDate');
+  
+  if (checkinInput) {
+    checkinInput.value = nextMonth.toISOString().split('T')[0];
+  }
+  if (checkoutInput) {
+    checkoutInput.value = lastDayNextMonth.toISOString().split('T')[0];
+  }
+}
+</script>
+</body>
+</html>
