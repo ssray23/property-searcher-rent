@@ -743,22 +743,26 @@
         <label>Quick Location Presets</label>
         <select id="otmLocationPreset" onchange="updateOTMLocation()">
           <option value="">-- Select a preset or enter custom below --</option>
-          <option value="Ealing, London|ealing-london">Ealing</option>
-          <option value="Hounslow West, London|hounslow-west-london-1">Hounslow West</option>
-          <option value="Acton, London|acton-london">Acton</option>
+          <option value="ealing|Ealing">Ealing</option>
+          <option value="hounslow-west-london-1|Hounslow West">Hounslow West</option>
+          <option value="acton-london|Acton">Acton</option>
+          <option value="ealing|Ealing|brentford,hounslow,south-ealing">Ealing + Brentford + Hounslow + South Ealing</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>Location</label>
-        <input type="text" id="otmLocation" value="Hounslow West, London" placeholder="e.g. Ealing, Hounslow, Acton">
+        <label>Primary Location Slug</label>
+        <input type="text" id="otmLocationSlug" placeholder="e.g. ealing, hounslow, acton-london">
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 Use the location slug from OnTheMarket URLs (e.g. "ealing" not "Ealing, London")
+        </div>
       </div>
 
       <div class="form-group">
-        <label>Location Slug (for URL path) - Optional</label>
-        <input type="text" id="otmLocationSlug" placeholder="e.g. hounslow-west-london-1">
+        <label>Additional Locations (comma-separated slugs) - Optional</label>
+        <input type="text" id="otmAltLocations" placeholder="e.g. brentford,hounslow,south-ealing">
         <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
-          💡 Auto-filled from presets. Leave empty for simple search.
+          💡 Add multiple areas to search. Separate with commas, no spaces.
         </div>
       </div>
 
@@ -826,6 +830,15 @@
             Bungalows
           </label>
         </div>
+      </div>
+
+      <div class="form-group">
+        <label>Sort By</label>
+        <select id="otmSortField">
+          <option value="update_date">Most recently added</option>
+          <option value="price">Price - Low to high</option>
+          <option value="-price">Price - High to low</option>
+        </select>
       </div>
 
       <div class="form-group">
@@ -934,14 +947,18 @@ function updateZooplaLocation() {
 
 function updateOTMLocation() {
   const dropdown = document.getElementById('otmLocationPreset');
-  const locationInput = document.getElementById('otmLocation');
   const slugInput = document.getElementById('otmLocationSlug');
+  const altLocationsInput = document.getElementById('otmAltLocations');
   
   if (dropdown.value) {
     const parts = dropdown.value.split('|');
-    locationInput.value = parts[0];
-    if (parts[1]) {
-      slugInput.value = parts[1];
+    if (parts[0]) {
+      slugInput.value = parts[0];
+    }
+    if (parts[2]) {
+      altLocationsInput.value = parts[2];
+    } else {
+      altLocationsInput.value = '';
     }
   }
 }
@@ -1204,10 +1221,37 @@ function generateZooplaURL() {
 }
 
 function generateOnTheMarketURL() {
-  const location = getVal("otmLocation") || "Hounslow West, London";
-  const locationSlug = getVal("otmLocationSlug");
+  const locationSlug = getVal("otmLocationSlug") || "ealing";
+  const altLocations = getVal("otmAltLocations");
+  
+  // Build the base URL with property type in path if only one type selected
+  let base = "https://www.onthemarket.com/to-rent";
+  
+  const propTypes = [];
+  if (document.getElementById("otmFlats").checked) propTypes.push("flats-apartments");
+  if (document.getElementById("otmDetached").checked) propTypes.push("detached");
+  if (document.getElementById("otmSemiDetached").checked) propTypes.push("semi-detached");
+  if (document.getElementById("otmTerraced").checked) propTypes.push("terraced");
+  if (document.getElementById("otmBungalows").checked) propTypes.push("bungalows");
+  
+  // If only one property type, add it to the path
+  if (propTypes.length === 1) {
+    base += `/${propTypes[0]}`;
+  } else if (propTypes.length > 1) {
+    base += "/property";
+  } else {
+    base += "/property";
+  }
+  
+  base += `/${locationSlug}/`;
   
   const params = [];
+  
+  // Additional locations
+  if (altLocations) {
+    const altLocs = altLocations.split(',').map(l => l.trim()).filter(l => l);
+    altLocs.forEach(loc => params.push(`alt-location-ids=${loc}`));
+  }
   
   // Price range
   const minPrice = getVal("otmMinPrice");
@@ -1221,32 +1265,21 @@ function generateOnTheMarketURL() {
   if (minBeds) params.push(`min-bedrooms=${minBeds}`);
   if (maxBeds) params.push(`max-bedrooms=${maxBeds}`);
   
-  // Property types
-  const propTypes = [];
-  if (document.getElementById("otmFlats").checked) propTypes.push("flats-apartments");
-  if (document.getElementById("otmDetached").checked) propTypes.push("detached");
-  if (document.getElementById("otmSemiDetached").checked) propTypes.push("semi-detached");
-  if (document.getElementById("otmTerraced").checked) propTypes.push("terraced");
-  if (document.getElementById("otmBungalows").checked) propTypes.push("bungalows");
-  
-  propTypes.forEach(pt => params.push(`prop-types=${pt}`));
-  
   // Exclusions
   const excludeShared = document.getElementById("otmExcludeShared").checked;
   const excludeStudent = document.getElementById("otmExcludeStudent").checked;
   
   if (excludeShared) params.push("shared=false");
+  
+  // Sort field
+  const sortField = getVal("otmSortField") || "update_date";
+  params.push(`sort-field=${sortField}`);
+  
   if (excludeStudent) params.push("student=false");
   
   params.push("view=map-list");
   
-  // Use different URL format based on whether we have a slug
-  if (locationSlug) {
-    return `https://www.onthemarket.com/to-rent/property/${locationSlug}/?${params.join("&")}`;
-  } else {
-    params.push(`location=${encodeURIComponent(location)}`);
-    return `https://www.onthemarket.com/to-rent/property/?${params.join("&")}`;
-  }
+  return `${base}?${params.join("&")}`;
 }
 
 function getVal(id) {
