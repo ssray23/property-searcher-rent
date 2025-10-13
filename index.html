@@ -833,6 +833,16 @@
       </div>
 
       <div class="form-group">
+        <label>Furnishing</label>
+        <select id="otmFurnishing">
+          <option value="">Any</option>
+          <option value="furnished">Furnished</option>
+          <option value="part-furnished">Part Furnished</option>
+          <option value="unfurnished">Unfurnished</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label>Sort By</label>
         <select id="otmSortField">
           <option value="update_date">Most recently added</option>
@@ -1258,6 +1268,10 @@ function generateOnTheMarketURL() {
   const maxPrice = getVal("otmMaxPrice");
   if (minPrice) params.push(`min-price=${minPrice}`);
   if (maxPrice) params.push(`max-price=${maxPrice}`);
+  
+  // Furnishing
+  const furnishing = getVal("otmFurnishing");
+  if (furnishing) params.push(`furnished=${furnishing}`);
   
   // Bedrooms
   const minBeds = getVal("otmMinBeds");
