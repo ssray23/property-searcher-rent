@@ -73,6 +73,11 @@
     background: #f3e6f5;
   }
   
+  .platform-selector label:has(input[value="onthemarket"]:checked) {
+    border-color: #00a859;
+    background: #e6f7f0;
+  }
+  
   .rightmove-theme .info-box {
     background: #d6e9f7;
     border: 2px solid #003d5c;
@@ -129,6 +134,34 @@
   
   .zoopla-theme .info-box strong {
     color: #7c2b85;
+  }
+  
+  .onthemarket-theme .info-box {
+    background: #e6f7f0;
+    border: 2px solid #00a859;
+  }
+  
+  .onthemarket-theme button {
+    background: #00a859;
+    color: #fff;
+    border: 3px solid #000;
+  }
+  
+  .onthemarket-theme button:hover {
+    background: #008a47;
+  }
+  
+  .onthemarket-theme input:focus,
+  .onthemarket-theme select:focus {
+    border-color: #00a859;
+  }
+  
+  .onthemarket-theme input[type="checkbox"] {
+    accent-color: #00a859;
+  }
+  
+  .onthemarket-theme .info-box strong {
+    color: #00a859;
   }
   
   .subtitle {
@@ -275,6 +308,10 @@
       <label>
         <input type="radio" name="platform" value="zoopla" onchange="togglePlatform()">
         Zoopla
+      </label>
+      <label>
+        <input type="radio" name="platform" value="onthemarket" onchange="togglePlatform()">
+        OnTheMarket
       </label>
     </div>
     
@@ -695,6 +732,117 @@
       </div>
     </div>
 
+    <!-- ONTHEMARKET FORM -->
+    <div id="onthemarketForm" style="display:none;">
+      <div class="info-box">
+        <strong>🟢 OnTheMarket Search Configuration</strong>
+        Set your preferences below to generate an OnTheMarket rental search URL.
+      </div>
+
+      <div class="form-group">
+        <label>Quick Location Presets</label>
+        <select id="otmLocationPreset" onchange="updateOTMLocation()">
+          <option value="">-- Select a preset or enter custom below --</option>
+          <option value="Ealing, London|ealing-london">Ealing</option>
+          <option value="Hounslow West, London|hounslow-west-london-1">Hounslow West</option>
+          <option value="Acton, London|acton-london">Acton</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="otmLocation" value="Hounslow West, London" placeholder="e.g. Ealing, Hounslow, Acton">
+      </div>
+
+      <div class="form-group">
+        <label>Location Slug (for URL path) - Optional</label>
+        <input type="text" id="otmLocationSlug" placeholder="e.g. hounslow-west-london-1">
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 Auto-filled from presets. Leave empty for simple search.
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Price (£/month)</label>
+          <input type="number" id="otmMinPrice" placeholder="Optional" step="50">
+        </div>
+
+        <div class="form-group">
+          <label>Max Price (£/month)</label>
+          <input type="number" id="otmMaxPrice" value="1500" placeholder="e.g. 1500" step="50">
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Bedrooms</label>
+          <select id="otmMinBeds">
+            <option value="">No min</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Max Bedrooms</label>
+          <select id="otmMaxBeds">
+            <option value="">No max</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Property Types (select multiple)</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="otmFlats" checked style="width: auto; margin-right: 8px;">
+            Flats/Apartments
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="otmDetached" style="width: auto; margin-right: 8px;">
+            Detached
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="otmSemiDetached" style="width: auto; margin-right: 8px;">
+            Semi-detached
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="otmTerraced" style="width: auto; margin-right: 8px;">
+            Terraced
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="otmBungalows" style="width: auto; margin-right: 8px;">
+            Bungalows
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Additional Filters</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="otmExcludeShared" checked style="width: auto; margin-right: 8px;">
+            Exclude shared accommodation
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="otmExcludeStudent" checked style="width: auto; margin-right: 8px;">
+            Exclude student accommodation
+          </label>
+        </div>
+      </div>
+    </div>
+
     <div class="button-group">
       <button onclick="openURL()">🚀 Open in <span id="platformName">Rightmove</span></button>
     </div>
@@ -708,32 +856,38 @@ function togglePlatform() {
   const rightmoveForm = document.getElementById('rightmoveForm');
   const airbnbForm = document.getElementById('airbnbForm');
   const zooplaForm = document.getElementById('zooplaForm');
+  const onthemarketForm = document.getElementById('onthemarketForm');
   const subtitle = document.getElementById('subtitle');
   const platformName = document.getElementById('platformName');
   const formContainer = document.getElementById('formContainer');
   
+  // Hide all forms
+  rightmoveForm.style.display = 'none';
+  airbnbForm.style.display = 'none';
+  zooplaForm.style.display = 'none';
+  onthemarketForm.style.display = 'none';
+  
   if (platform === 'rightmove') {
     rightmoveForm.style.display = 'block';
-    airbnbForm.style.display = 'none';
-    zooplaForm.style.display = 'none';
     subtitle.textContent = 'Generate working Rightmove rental search URLs (excludes house shares & student accommodation)';
     platformName.textContent = 'Rightmove';
     formContainer.className = 'rightmove-theme';
   } else if (platform === 'airbnb') {
-    rightmoveForm.style.display = 'none';
     airbnbForm.style.display = 'block';
-    zooplaForm.style.display = 'none';
     subtitle.textContent = 'Generate Airbnb rental search URLs with your preferred filters';
     platformName.textContent = 'Airbnb';
     formContainer.className = 'airbnb-theme';
     updatePriceHelper();
-  } else {
-    rightmoveForm.style.display = 'none';
-    airbnbForm.style.display = 'none';
+  } else if (platform === 'zoopla') {
     zooplaForm.style.display = 'block';
     subtitle.textContent = 'Generate Zoopla rental search URLs with your preferred filters';
     platformName.textContent = 'Zoopla';
     formContainer.className = 'zoopla-theme';
+  } else {
+    onthemarketForm.style.display = 'block';
+    subtitle.textContent = 'Generate OnTheMarket rental search URLs with your preferred filters';
+    platformName.textContent = 'OnTheMarket';
+    formContainer.className = 'onthemarket-theme';
   }
 }
 
@@ -778,6 +932,20 @@ function updateZooplaLocation() {
   }
 }
 
+function updateOTMLocation() {
+  const dropdown = document.getElementById('otmLocationPreset');
+  const locationInput = document.getElementById('otmLocation');
+  const slugInput = document.getElementById('otmLocationSlug');
+  
+  if (dropdown.value) {
+    const parts = dropdown.value.split('|');
+    locationInput.value = parts[0];
+    if (parts[1]) {
+      slugInput.value = parts[1];
+    }
+  }
+}
+
 function showLocationSuccess() {
   const msg = document.getElementById('locationSuccess');
   msg.style.display = 'block';
@@ -791,8 +959,10 @@ function openURL() {
     url = generateRightmoveURL();
   } else if (platform === 'airbnb') {
     url = generateAirbnbURL();
-  } else {
+  } else if (platform === 'zoopla') {
     url = generateZooplaURL();
+  } else {
+    url = generateOnTheMarketURL();
   }
   window.open(url, "_blank");
 }
@@ -1030,6 +1200,52 @@ function generateZooplaURL() {
     // Simplified search format
     params.push("section=to-rent");
     return `https://www.zoopla.co.uk/search/?${params.join("&")}`;
+  }
+}
+
+function generateOnTheMarketURL() {
+  const location = getVal("otmLocation") || "Hounslow West, London";
+  const locationSlug = getVal("otmLocationSlug");
+  
+  const params = [];
+  
+  // Price range
+  const minPrice = getVal("otmMinPrice");
+  const maxPrice = getVal("otmMaxPrice");
+  if (minPrice) params.push(`min-price=${minPrice}`);
+  if (maxPrice) params.push(`max-price=${maxPrice}`);
+  
+  // Bedrooms
+  const minBeds = getVal("otmMinBeds");
+  const maxBeds = getVal("otmMaxBeds");
+  if (minBeds) params.push(`min-bedrooms=${minBeds}`);
+  if (maxBeds) params.push(`max-bedrooms=${maxBeds}`);
+  
+  // Property types
+  const propTypes = [];
+  if (document.getElementById("otmFlats").checked) propTypes.push("flats-apartments");
+  if (document.getElementById("otmDetached").checked) propTypes.push("detached");
+  if (document.getElementById("otmSemiDetached").checked) propTypes.push("semi-detached");
+  if (document.getElementById("otmTerraced").checked) propTypes.push("terraced");
+  if (document.getElementById("otmBungalows").checked) propTypes.push("bungalows");
+  
+  propTypes.forEach(pt => params.push(`prop-types=${pt}`));
+  
+  // Exclusions
+  const excludeShared = document.getElementById("otmExcludeShared").checked;
+  const excludeStudent = document.getElementById("otmExcludeStudent").checked;
+  
+  if (excludeShared) params.push("shared=false");
+  if (excludeStudent) params.push("student=false");
+  
+  params.push("view=map-list");
+  
+  // Use different URL format based on whether we have a slug
+  if (locationSlug) {
+    return `https://www.onthemarket.com/to-rent/property/${locationSlug}/?${params.join("&")}`;
+  } else {
+    params.push(`location=${encodeURIComponent(location)}`);
+    return `https://www.onthemarket.com/to-rent/property/?${params.join("&")}`;
   }
 }
 
