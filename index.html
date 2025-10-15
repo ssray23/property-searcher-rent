@@ -700,6 +700,18 @@
       </div>
 
       <div class="form-group">
+        <label>Added to Zoopla</label>
+        <select id="zooplaAdded">
+          <option value="">Anytime</option>
+          <option value="24_hours">Last 24 hours</option>
+          <option value="3_days">Last 3 days</option>
+          <option value="7_days">Last 7 days</option>
+          <option value="14_days">Last 14 days</option>
+          <option value="30_days">Last 30 days</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label>Search Radius</label>
         <select id="zooplaRadius">
           <option value="">This area only</option>
@@ -839,6 +851,16 @@
           <option value="furnished">Furnished</option>
           <option value="part-furnished">Part Furnished</option>
           <option value="unfurnished">Unfurnished</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Added to site</label>
+        <select id="otmRecentlyAdded">
+          <option value="">Any time</option>
+          <option value="24-hours">24 hours</option>
+          <option value="3-days">3 days</option>
+          <option value="7-days">7 days</option>
         </select>
       </div>
 
@@ -1210,7 +1232,11 @@ function generateZooplaURL() {
   // Furnishing
   const furnishing = getVal("zooplaFurnishing");
   if (furnishing) params.push(`furnished_state=${furnishing}`);
-  
+
+  // Added to Zoopla
+  const added = getVal("zooplaAdded");
+  if (added) params.push(`added=${added}`);
+
   // Radius
   const radius = getVal("zooplaRadius");
   if (radius) params.push(`radius=${radius}`);
@@ -1272,12 +1298,16 @@ function generateOnTheMarketURL() {
   // Furnishing
   const furnishing = getVal("otmFurnishing");
   if (furnishing) params.push(`furnished=${furnishing}`);
-  
+
   // Bedrooms
   const minBeds = getVal("otmMinBeds");
   const maxBeds = getVal("otmMaxBeds");
   if (minBeds) params.push(`min-bedrooms=${minBeds}`);
   if (maxBeds) params.push(`max-bedrooms=${maxBeds}`);
+
+  // Recently added
+  const recentlyAdded = getVal("otmRecentlyAdded");
+  if (recentlyAdded) params.push(`recently-added=${recentlyAdded}`);
   
   // Exclusions
   const excludeShared = document.getElementById("otmExcludeShared").checked;
