@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd time-based filters for Zoopla and OnTheMarket\n\nAdded \"Added to Zoopla\" and \"Added to site\" filters to allow users to filter properties by when they were added to the respective platforms.\n\n- Zoopla: Added dropdown with options from 24 hours to 30 days\n- OnTheMarket: Added dropdown with options from 24 hours to 7 days\n- Updated URL generation functions to include the new parameters\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
