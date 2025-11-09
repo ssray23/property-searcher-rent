@@ -84,13 +84,13 @@
   }
   
   .rightmove-theme button {
-    background: #003d5c;
+    background: #005a85;
     color: #fff;
-    border: 3px solid #000;
+    border: 1px solid #888;
   }
   
   .rightmove-theme button:hover {
-    background: #002a40;
+    background: #004a70;
   }
   
   .airbnb-theme .info-box {
@@ -99,13 +99,13 @@
   }
   
   .airbnb-theme button {
-    background: #e6004c;
+    background: #ff3366;
     color: #fff;
-    border: 3px solid #000;
+    border: 1px solid #888;
   }
   
   .airbnb-theme button:hover {
-    background: #b30039;
+    background: #e6004c;
   }
   
   .zoopla-theme .info-box {
@@ -114,13 +114,13 @@
   }
   
   .zoopla-theme button {
-    background: #7c2b85;
+    background: #9d4da8;
     color: #fff;
-    border: 3px solid #000;
+    border: 1px solid #888;
   }
   
   .zoopla-theme button:hover {
-    background: #5a1f61;
+    background: #7c2b85;
   }
   
   .zoopla-theme input:focus,
@@ -142,13 +142,13 @@
   }
   
   .onthemarket-theme button {
-    background: #00a859;
+    background: #00cc6f;
     color: #fff;
-    border: 3px solid #000;
+    border: 1px solid #888;
   }
   
   .onthemarket-theme button:hover {
-    background: #008a47;
+    background: #00a859;
   }
   
   .onthemarket-theme input:focus,
@@ -162,6 +162,39 @@
   
   .onthemarket-theme .info-box strong {
     color: #00a859;
+  }
+  
+  .platform-selector label:has(input[value="openrent"]:checked) {
+    border-color: #ff6b35;
+    background: #fff4f0;
+  }
+  
+  .openrent-theme .info-box {
+    background: #fff4f0;
+    border: 2px solid #ff6b35;
+  }
+  
+  .openrent-theme button {
+    background: #ff8c5a;
+    color: #fff;
+    border: 1px solid #888;
+  }
+  
+  .openrent-theme button:hover {
+    background: #ff6b35;
+  }
+  
+  .openrent-theme input:focus,
+  .openrent-theme select:focus {
+    border-color: #ff6b35;
+  }
+  
+  .openrent-theme input[type="checkbox"] {
+    accent-color: #ff6b35;
+  }
+  
+  .openrent-theme .info-box strong {
+    color: #ff6b35;
   }
   
   .subtitle {
@@ -252,18 +285,18 @@
     flex: 1;
     padding: 14px;
     cursor: pointer;
-    background: #003d5c;
+    background: #005a85;
     color: #fff; 
     font-weight: bold;
     font-family: Helvetica, Arial, sans-serif;
-    border: 3px solid #000; 
+    border: 1px solid #888; 
     border-radius: 10px;
     font-size: 16px;
     transition: all 0.3s;
   }
   
   button:hover { 
-    background: #002a40;
+    background: #004a70;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   }
@@ -312,6 +345,10 @@
       <label>
         <input type="radio" name="platform" value="onthemarket" onchange="togglePlatform()">
         OnTheMarket
+      </label>
+      <label>
+        <input type="radio" name="platform" value="openrent" onchange="togglePlatform()">
+        OpenRent
       </label>
     </div>
     
@@ -891,6 +928,165 @@
       </div>
     </div>
 
+    <!-- OPENRENT FORM -->
+    <div id="openrentForm" style="display:none;">
+      <div class="info-box">
+        <strong>🟠 OpenRent Search Configuration</strong>
+        Set your preferences below to generate an OpenRent rental search URL.
+      </div>
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="openrentLocation" value="South Ealing Station, Ealing, Greater London" placeholder="e.g. South Ealing Station, Ealing, Greater London">
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 Enter the full location name as it appears on OpenRent
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Location Slug (for URL path) - Optional</label>
+        <input type="text" id="openrentLocationSlug" placeholder="e.g. south-ealing-station-ealing-greater-london">
+        <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+          💡 If empty, will auto-generate from location name
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Price (£/month)</label>
+          <input type="number" id="openrentMinPrice" placeholder="Optional" step="50">
+        </div>
+
+        <div class="form-group">
+          <label>Max Price (£/month)</label>
+          <input type="number" id="openrentMaxPrice" value="1500" placeholder="e.g. 1500" step="50">
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Min Bedrooms</label>
+          <select id="openrentMinBeds">
+            <option value="">No min</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Max Bedrooms</label>
+          <select id="openrentMaxBeds">
+            <option value="">No max</option>
+            <option value="0">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          <label>Search Radius Type</label>
+          <select id="openrentSearchType">
+            <option value="minutes">Minutes (walking time)</option>
+            <option value="km">Kilometers</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Search Radius</label>
+          <select id="openrentArea">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8" selected>8</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Property Type</label>
+        <select id="openrentPropertyType">
+          <option value="">Any</option>
+          <option value="houses">Houses</option>
+          <option value="flats">Flats</option>
+          <option value="rooms">Rooms</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Furnishing</label>
+        <select id="openrentFurnishing">
+          <option value="">Any</option>
+          <option value="furnished">Furnished</option>
+          <option value="unfurnished">Unfurnished</option>
+          <option value="furnishedOrUnfurnished">Furnished or Unfurnished</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Additional Filters</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentAcceptStudents" style="width: auto; margin-right: 8px;">
+            Accept Students
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentAcceptFamilies" style="width: auto; margin-right: 8px;">
+            Accept Families
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentAcceptDSS" style="width: auto; margin-right: 8px;">
+            Accept DSS Income
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentAcceptPets" style="width: auto; margin-right: 8px;">
+            Accept Pets
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentBillsIncluded" style="width: auto; margin-right: 8px;">
+            Bills Included
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentGarden" style="width: auto; margin-right: 8px;">
+            Garden Access
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentParking" style="width: auto; margin-right: 8px;">
+            Parking Access
+          </label>
+          <label style="display: flex; align-items: center; font-weight: normal; margin: 0;">
+            <input type="checkbox" id="openrentVideoTour" style="width: auto; margin-right: 8px;">
+            Video Tour
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Sort By</label>
+        <select id="openrentSort">
+          <option value="distance">Distance</option>
+          <option value="price">Price: low to high</option>
+          <option value="priceDesc">Price: high to low</option>
+          <option value="new">New</option>
+        </select>
+      </div>
+    </div>
+
     <div class="button-group">
       <button onclick="openURL()">🚀 Open in <span id="platformName">Rightmove</span></button>
     </div>
@@ -905,6 +1101,7 @@ function togglePlatform() {
   const airbnbForm = document.getElementById('airbnbForm');
   const zooplaForm = document.getElementById('zooplaForm');
   const onthemarketForm = document.getElementById('onthemarketForm');
+  const openrentForm = document.getElementById('openrentForm');
   const subtitle = document.getElementById('subtitle');
   const platformName = document.getElementById('platformName');
   const formContainer = document.getElementById('formContainer');
@@ -914,6 +1111,7 @@ function togglePlatform() {
   airbnbForm.style.display = 'none';
   zooplaForm.style.display = 'none';
   onthemarketForm.style.display = 'none';
+  openrentForm.style.display = 'none';
   
   if (platform === 'rightmove') {
     rightmoveForm.style.display = 'block';
@@ -931,6 +1129,11 @@ function togglePlatform() {
     subtitle.textContent = 'Generate Zoopla rental search URLs with your preferred filters';
     platformName.textContent = 'Zoopla';
     formContainer.className = 'zoopla-theme';
+  } else if (platform === 'openrent') {
+    openrentForm.style.display = 'block';
+    subtitle.textContent = 'Generate OpenRent rental search URLs with your preferred filters';
+    platformName.textContent = 'OpenRent';
+    formContainer.className = 'openrent-theme';
   } else {
     onthemarketForm.style.display = 'block';
     subtitle.textContent = 'Generate OnTheMarket rental search URLs with your preferred filters';
@@ -1013,6 +1216,8 @@ function openURL() {
     url = generateAirbnbURL();
   } else if (platform === 'zoopla') {
     url = generateZooplaURL();
+  } else if (platform === 'openrent') {
+    url = generateOpenRentURL();
   } else {
     url = generateOnTheMarketURL();
   }
@@ -1325,6 +1530,106 @@ function generateOnTheMarketURL() {
   if (excludeStudent) params.push("student=false");
   
   params.push("view=map-list");
+  
+  return `${base}?${params.join("&")}`;
+}
+
+function generateOpenRentURL() {
+  const location = getVal("openrentLocation") || "South Ealing Station, Ealing, Greater London";
+  let locationSlug = getVal("openrentLocationSlug");
+  
+  // Auto-generate slug from location if not provided
+  if (!locationSlug && location) {
+    locationSlug = location
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+  }
+  
+  // Build base URL
+  let base = "https://www.openrent.co.uk/properties-to-rent";
+  if (locationSlug) {
+    base += `/${locationSlug}`;
+  }
+  
+  const params = [];
+  
+  // Location term
+  params.push(`term=${encodeURIComponent(location)}`);
+  
+  // Search type and radius
+  const searchType = getVal("openrentSearchType") || "minutes";
+  const area = getVal("openrentArea") || "8";
+  params.push(`searchType=${searchType}`);
+  params.push(`area=${area}`);
+  
+  // Price range
+  const minPrice = getVal("openrentMinPrice");
+  const maxPrice = getVal("openrentMaxPrice");
+  if (minPrice) params.push(`prices_min=${minPrice}`);
+  if (maxPrice) params.push(`prices_max=${maxPrice}`);
+  
+  // Bedrooms
+  const minBeds = getVal("openrentMinBeds");
+  const maxBeds = getVal("openrentMaxBeds");
+  if (minBeds !== "") params.push(`bedrooms_min=${minBeds}`);
+  if (maxBeds !== "") params.push(`bedrooms_max=${maxBeds}`);
+  
+  // Property type
+  const propType = getVal("openrentPropertyType");
+  if (propType) params.push(`propertyType=${propType}`);
+  
+  // Furnishing
+  const furnishing = getVal("openrentFurnishing");
+  if (furnishing) {
+    if (furnishing === "furnishedOrUnfurnished") {
+      params.push("furnishedOptions=furnishedOrUnfurnished");
+    } else {
+      params.push(`furnishedOptions=${furnishing}Only`);
+    }
+  }
+  
+  // Additional filters
+  if (document.getElementById("openrentAcceptStudents").checked) {
+    params.push("acceptStudents=true");
+  }
+  if (document.getElementById("openrentAcceptFamilies").checked) {
+    params.push("acceptFamilies=true");
+  }
+  if (document.getElementById("openrentAcceptDSS").checked) {
+    params.push("acceptDSS=true");
+  }
+  if (document.getElementById("openrentAcceptPets").checked) {
+    params.push("acceptPets=true");
+  }
+  if (document.getElementById("openrentBillsIncluded").checked) {
+    params.push("billsIncluded=true");
+  }
+  if (document.getElementById("openrentGarden").checked) {
+    params.push("gardenAccess=true");
+  }
+  if (document.getElementById("openrentParking").checked) {
+    params.push("parkingAccess=true");
+  }
+  if (document.getElementById("openrentVideoTour").checked) {
+    params.push("videoTour=true");
+  }
+  
+  // Sort
+  const sort = getVal("openrentSort");
+  if (sort) {
+    if (sort === "price") {
+      params.push("sort=price");
+    } else if (sort === "priceDesc") {
+      params.push("sort=priceDesc");
+    } else if (sort === "new") {
+      params.push("sort=new");
+    } else {
+      params.push("sort=distance");
+    }
+  }
   
   return `${base}?${params.join("&")}`;
 }
