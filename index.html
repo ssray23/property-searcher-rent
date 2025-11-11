@@ -370,7 +370,7 @@
         <label>Quick Location Presets</label>
         <select id="locationPreset" onchange="updateLocation()">
           <option value="">-- Select a preset or enter custom below --</option>
-          <option value='USERDEFINEDAREA^{"id":9934682}'>Custom Map Area (Default)</option>
+          <option value='USERDEFINEDAREA^{"id":9797529}'>Custom Map Area (Default)</option>
           <option value='USERDEFINEDAREA^{"id":9797538}'>Hounslow stations</option>
           <option value='USERDEFINEDAREA^{"id":9797529}'>Ealing Stations</option>
           <option value="REGION%5E93962">Hounslow</option>
@@ -1230,7 +1230,7 @@ function generateRightmoveURL() {
   
   let locationId = getVal("locationId");
   if (!locationId) {
-    locationId = 'USERDEFINEDAREA^{"id":9934682}';
+    locationId = 'USERDEFINEDAREA^{"id":9797529}';
   }
   
   if (locationId.includes('{')) {
